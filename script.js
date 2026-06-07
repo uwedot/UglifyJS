@@ -10,7 +10,7 @@ var $out          = $('out');
 var $in           = $('in');
 var $error        = $('error');
 var $stats        = $('stats');
-var $headerStats  = $('header-stats');
+
 var $body         = document.body;
 var $btn_options  = $('btn-options');
 var $btn_go       = $('btn-go');
@@ -202,7 +202,6 @@ function go(throw_on_error) {
     var saved = ((1 - res.code.length / input.length) * 100 || 0).toFixed(1);
     var statsText = res.code.length.toLocaleString() + ' bytes · saved ' + saved + '%';
     $stats.textContent = statsText;
-    $headerStats.textContent = statsText;
   }
 }
 
@@ -249,7 +248,6 @@ function go_to_start() {
   clearTimeout(ait_timeout);
   hide('s-options s-error s-output');
   show('s-input');
-  $headerStats.textContent = '';
   return false;
 }
 

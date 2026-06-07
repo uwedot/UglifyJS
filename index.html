@@ -23,7 +23,6 @@
     <span class="header-tagline">JavaScript Minifier</span>
   </div>
   <div class="header-right">
-    <span id="header-stats"></span>
   </div>
 </div>
 
@@ -62,7 +61,7 @@
     comparisons      : true,
     conditionals     : true,
     dead_code        : true,
-    drop_console     : false,
+    drop_console     : true,
     drop_debugger    : true,
     evaluate         : true,
     expression       : false,
@@ -71,14 +70,14 @@
     hoist_props      : true,
     hoist_vars       : false,
     if_return        : true,
-    inline           : true,
+    inline           : 3,
     join_vars        : true,
-    keep_fargs       : true,
+    keep_fargs       : false,
     keep_fnames      : false,
-    keep_infinity    : false,
+    keep_infinity    : true,
     loops            : true,
     negate_iife      : true,
-    passes           : 1,
+    passes           : 3,
     properties       : true,
     pure_getters     : "strict",
     pure_funcs       : null,
@@ -104,7 +103,7 @@
     keep_fnames      : false,
     properties       : false,
     reserved         : [],
-    toplevel         : false
+    toplevel         : true
   },
   output: {
     ascii_only       : false,
