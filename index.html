@@ -49,9 +49,9 @@
     bare_returns     : false,
     expression       : false,
     filename         : null,
-    html5_comments   : true,
+    html5_comments   : false,
     shebang          : true,
-    strict           : false,
+    strict           : true,
     toplevel         : null
   },
   compress: {
@@ -66,7 +66,7 @@
     evaluate         : true,
     expression       : false,
     global_defs      : {},
-    hoist_funs       : false,
+    hoist_funs       : true,
     hoist_props      : true,
     hoist_vars       : false,
     if_return        : true,
@@ -74,12 +74,12 @@
     join_vars        : true,
     keep_fargs       : false,
     keep_fnames      : false,
-    keep_infinity    : true,
+    keep_infinity    : false,
     loops            : true,
     negate_iife      : true,
     passes           : 3,
     properties       : true,
-    pure_getters     : "strict",
+    pure_getters     : true,
     pure_funcs       : null,
     reduce_funcs     : true,
     reduce_vars      : true,
@@ -99,17 +99,17 @@
     unused           : true
   },
   mangle: {
-    eval             : false,
+    eval             : true,
     keep_fnames      : false,
     properties       : false,
     reserved         : [],
-    toplevel         : true
+    toplevel         : false
   },
   output: {
     ascii_only       : false,
     beautify         : false,
-    comments         : /@license|@preserve|^!/,
-    indent_level     : 4,
+    comments         : false,
+    indent_level     : 0,
     indent_start     : 0,
     inline_script    : true,
     keep_quoted_props: false,
