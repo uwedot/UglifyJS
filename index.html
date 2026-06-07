@@ -1,168 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UglifyJS</title>
-  <link rel="shortcut icon" href="favicon.ico">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="A fan-made archive of Ye's unreleased discography.">
+  <meta name="theme-color" content="#0b0b0c">
+  <meta name="color-scheme" content="dark">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ye Vault">
+  <meta property="og:title" content="Ye Vault">
+  <meta property="og:description" content="A fan-made archive of Ye's unreleased discography.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Ye Vault">
+  <meta name="twitter:description" content="A fan-made archive of Ye's unreleased discography.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="dns-prefetch" href="//docs.google.com">
+  <link rel="preconnect" href="https://docs.google.com" crossorigin>
+  <link rel="icon" href="data:,">
+  <title>Ye Vault</title>
   <link rel="stylesheet" href="style.css">
 </head>
+<body>
 
-<body class="s-input">
+<a class="skip-link" href="#main-content">Skip to content</a>
 
-<div class="header">
-  <div class="header-left">
-    <a id="header-link" href="./" class="logo">
-      <span class="logo-badge">{}</span>
-      <span class="logo-text">UglifyJS <span class="logo-ver">3</span></span>
-    </a>
-    <span class="header-sep"></span>
-    <span class="header-tagline">JavaScript Minifier</span>
+<nav class="nav" aria-label="Site navigation">
+  <div class="nav-logo">
+    <span class="nav-logo-name">Ye Vault</span>
+    <span class="nav-logo-sub">Unreleased discography</span>
   </div>
-  <div class="header-right">
+
+  <div class="nav-dropdown-container">
+    <button type="button" id="nav-tab-btn" class="nav-dropdown-btn" aria-haspopup="true" aria-expanded="false">
+      <span id="nav-btn-text">Unreleased</span>
+      <svg class="dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6,9 12,15 18,9"/>
+      </svg>
+    </button>
+    <div id="nav-tab-menu" class="nav-dropdown-menu" role="menu">
+      <div class="nav-dropdown-item active" data-tab="all"     role="menuitem">Unreleased</div>
+      <div class="nav-dropdown-item"        data-tab="best"    role="menuitem">Best Of</div>
+      <div class="nav-dropdown-item"        data-tab="special" role="menuitem">Special</div>
+      <div class="nav-dropdown-item"        data-tab="grails"  role="menuitem">Grails</div>
+      <div class="nav-dropdown-item"        data-tab="ai"      role="menuitem">AI</div>
+      <div class="nav-dropdown-item"        data-tab="recent"  role="menuitem">Recent</div>
+    </div>
   </div>
+
+  <div class="nav-stats" aria-label="Stats">
+    <div class="nav-stat" id="stat-eras">Eras: <span id="nav-eras">—</span></div>
+    <div class="nav-stat">Songs: <span id="nav-songs">—</span></div>
+  </div>
+</nav>
+
+<main id="main-content">
+  <div class="controls-row">
+    <div class="search-wrap">
+      <label for="search-box" class="sr-only">Search songs or eras</label>
+      <div class="search-inner">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input id="search-box" class="search-box" type="search" placeholder="Search songs or eras…" autocomplete="off" spellcheck="false" aria-label="Search songs or eras">
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-dropdown-container">
+        <button type="button" id="quality-filter-btn" class="filter-dropdown-btn" aria-haspopup="true" aria-expanded="false">
+          Quality
+          <svg class="dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polyline points="6,9 12,15 18,9"/>
+          </svg>
+        </button>
+        <div id="quality-filter-menu" class="filter-dropdown-menu" role="menu" aria-label="Filter by quality">
+          <div class="filter-item active" data-quality="rec"      role="menuitemcheckbox" aria-checked="true">Recording</div>
+          <div class="filter-item active" data-quality="low"      role="menuitemcheckbox" aria-checked="true">Low Quality</div>
+          <div class="filter-item active" data-quality="high"     role="menuitemcheckbox" aria-checked="true">High Quality</div>
+          <div class="filter-item active" data-quality="cd"       role="menuitemcheckbox" aria-checked="true">CD Quality</div>
+          <div class="filter-item active" data-quality="lossless" role="menuitemcheckbox" aria-checked="true">Lossless</div>
+          <div class="filter-item active" data-quality="unavail"  role="menuitemcheckbox" aria-checked="true">Not Available</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="era-list" id="era-list" role="list" aria-live="polite" aria-label="Era list">
+    <div class="skeleton-wrap" aria-hidden="true">
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <p class="footer-text">Not affiliated with Yeezy LLC</p>
+</footer>
+
+<button type="button" id="scroll-top" class="scroll-top" aria-label="Scroll to top" hidden>
+  <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">
+    <line x1="12" y1="19" x2="12" y2="5"/>
+    <polyline points="5,12 12,5 19,12"/>
+  </svg>
+</button>
+
+<div id="global-player" class="global-player" role="region" aria-label="Audio player" hidden>
+  <audio id="main-audio" preload="none"></audio>
+
+  <div class="player-info">
+    <span id="player-track-name" class="player-track-name" aria-live="polite"></span>
+    <div class="player-track-times" aria-hidden="true">
+      <span id="player-track-current" class="player-track-current">0:00</span>
+      <span class="player-track-sep">·</span>
+      <span id="player-track-length" class="player-track-length">0:00</span>
+    </div>
+  </div>
+
+  <div class="player-controls">
+    <button type="button" id="player-play-btn" class="player-btn player-play" aria-label="Play">
+      <svg id="player-play-icon"  viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
+      <svg id="player-pause-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    </button>
+  </div>
+
+  <div class="player-scrubber-wrap">
+    <span id="player-current" class="player-time" aria-label="Current time">0:00</span>
+    <div class="player-scrubber" id="player-scrubber" role="slider" aria-label="Seek position" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+      <div class="player-scrubber-track">
+        <div class="player-scrubber-fill" id="player-fill"></div>
+        <div class="player-scrubber-thumb" id="player-thumb"></div>
+      </div>
+    </div>
+    <span id="player-duration" class="player-time" aria-label="Duration">0:00</span>
+  </div>
+
+  <div class="player-volume-wrap">
+    <svg class="player-vol-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <polygon points="11,5 6,9 2,9 2,15 6,15 11,19"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+    </svg>
+    <div class="player-volume" id="player-volume" role="slider" aria-label="Volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="80" tabindex="0">
+      <div class="player-scrubber-track">
+        <div class="player-scrubber-fill" id="player-vol-fill"></div>
+        <div class="player-scrubber-thumb" id="player-vol-thumb"></div>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" id="player-close-btn" class="player-btn player-close" aria-label="Close player">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  </button>
 </div>
 
-<div class="content">
-
-  <div class="col i i-input" data-label="Input">
-    <div class="drop-zone" id="drop-zone">Drop a .js file here</div>
-    <textarea id="in" spellcheck="false" tabindex="1" autofocus placeholder="Paste JavaScript here, or upload a file…"></textarea>
-    <div class="tools">
-      <label class="btn-file" tabindex="2">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 6l4-5 4 5M2 12v2a1 1 0 001 1h10a1 1 0 001-1v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Upload
-        <input type="file" id="file-upload" accept=".js" tabindex="-1">
-      </label>
-      <button id="btn-options" tabindex="3">Options</button>
-      <label class="label-ait"><input id="cb-as-i-type" type="checkbox" checked> As I type</label>
-      <button class="btn-main" id="btn-go" tabindex="1">Minify</button>
-    </div>
-  </div>
-
-  <div class="col i i-options" data-label="Options">
-    <textarea id="options" spellcheck="false" tabindex="1">{
-  parse: {
-    bare_returns     : false,
-    expression       : false,
-    filename         : null,
-    html5_comments   : false,
-    shebang          : true,
-    strict           : true,
-    toplevel         : null
-  },
-  compress: {
-    arrows           : true,
-    booleans         : true,
-    collapse_vars    : true,
-    comparisons      : true,
-    conditionals     : true,
-    dead_code        : true,
-    drop_console     : true,
-    drop_debugger    : true,
-    evaluate         : true,
-    expression       : false,
-    global_defs      : {},
-    hoist_funs       : true,
-    hoist_props      : true,
-    hoist_vars       : false,
-    if_return        : true,
-    inline           : 3,
-    join_vars        : true,
-    keep_fargs       : false,
-    keep_fnames      : false,
-    keep_infinity    : false,
-    loops            : true,
-    negate_iife      : true,
-    passes           : 3,
-    properties       : true,
-    pure_getters     : true,
-    pure_funcs       : null,
-    reduce_funcs     : true,
-    reduce_vars      : true,
-    sequences        : true,
-    side_effects     : true,
-    switches         : true,
-    top_retain       : null,
-    toplevel         : false,
-    typeofs          : true,
-    unsafe           : false,
-    unsafe_comps     : false,
-    unsafe_Function  : false,
-    unsafe_math      : false,
-    unsafe_proto     : false,
-    unsafe_regexp    : false,
-    unsafe_undefined : false,
-    unused           : true
-  },
-  mangle: {
-    eval             : true,
-    keep_fnames      : false,
-    properties       : false,
-    reserved         : [],
-    toplevel         : false
-  },
-  output: {
-    ascii_only       : false,
-    beautify         : false,
-    comments         : false,
-    indent_level     : 0,
-    indent_start     : 0,
-    inline_script    : true,
-    keep_quoted_props: false,
-    max_line_len     : false,
-    preamble         : null,
-    preserve_line    : false,
-    quote_keys       : false,
-    quote_style      : 0,
-    semicolons       : true,
-    shebang          : true,
-    source_map       : null,
-    webkit           : false,
-    width            : 80,
-    wrap_iife        : false
-  },
-  wrap: false
-}</textarea>
-    <div class="tools">
-      <button class="btn-main" id="btn-options-save" tabindex="2">Save</button>
-      <button id="btn-options-reset" tabindex="2">Use defaults</button>
-    </div>
-  </div>
-
-  <div class="col i i-output" data-label="Output">
-    <div class="output-bar">
-      <span id="stats"></span>
-      <button id="btn-copy" class="btn-icon" title="Copy to clipboard">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11H2a1 1 0 01-1-1V2a1 1 0 011-1h8a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        Copy
-      </button>
-      <button id="btn-download" class="btn-icon" title="Download minified file">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 14h8M4 10l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Download
-      </button>
-    </div>
-    <textarea id="out" spellcheck="false" tabindex="3" placeholder="Minified output appears here…" readonly></textarea>
-  </div>
-
-  <div class="col i i-error" data-label="Error">
-    <pre id="error"></pre>
-  </div>
-
-</div>
-
-<script src="lib/minify.js"></script>
-<script src="lib/utils.js"></script>
-<script src="lib/ast.js"></script>
-<script src="lib/parse.js"></script>
-<script src="lib/transform.js"></script>
-<script src="lib/scope.js"></script>
-<script src="lib/output.js"></script>
-<script src="lib/compress.js"></script>
-<script src="lib/propmangle.js"></script>
-<script src="script.js"></script>
+<script src="app.min.js" defer></script>
 </body>
 </html>
