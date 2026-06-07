@@ -1,43 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<title>UglifyJS 3: Online JavaScript minifier</title>
-	<!--
-		Wrapper created by Dan Wolff (danwolff.se)
-		This wrapper is in the public domain. Attribution not required but appreciated.
-
-		UglifyJS is released under the BSD license, copyright Mihai Bazon.
-		For more information, see https://github.com/mishoo/UglifyJS2/.
-	 -->
-
-	<link rel="shortcut icon" href="favicon.ico">
-	<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UglifyJS 3 — JS Minifier</title>
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="s-input s-info">
+<body class="s-input">
 
 <div class="header">
-	<h1><a id="header-link" href="./">UglifyJS 3: Online JavaScript minifier</a></h1>
+  <div class="header-left">
+    <a id="header-link" href="./" class="logo">
+      <span class="logo-badge">{}</span>
+      <span class="logo-text">UglifyJS <span class="logo-ver">3</span></span>
+    </a>
+    <span class="header-sep"></span>
+    <span class="header-tagline">JavaScript Minifier</span>
+  </div>
+  <div class="header-right">
+    <span id="header-stats"></span>
+  </div>
 </div>
 
-
 <div class="content">
-	<div class="col i i-input">
-<textarea id="in" rows="15" cols="80" spellcheck="false" tabindex="1" autofocus>// Your code goes here
 
+  <div class="col i i-input" data-label="Input">
+    <div class="drop-zone" id="drop-zone">Drop a .js file here</div>
+    <textarea id="in" spellcheck="false" tabindex="1" autofocus placeholder="Paste JavaScript here, or upload a file…"></textarea>
+    <div class="tools">
+      <label class="btn-file" tabindex="2">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 6l4-5 4 5M2 12v2a1 1 0 001 1h10a1 1 0 001-1v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Upload
+        <input type="file" id="file-upload" accept=".js" tabindex="-1">
+      </label>
+      <button id="btn-options" tabindex="3">Options</button>
+      <label class="label-ait"><input id="cb-as-i-type" type="checkbox" checked> As I type</label>
+      <button class="btn-main" id="btn-go" tabindex="1">Minify</button>
+    </div>
+  </div>
 
-</textarea>
-		<div class="tools">
-			<button class="btn-main pull-right" id="btn-go" tabindex="1">Minify</button>
-			<button id="btn-options" tabindex="2">Options</button>
-			<label><input id="cb-as-i-type" type="checkbox" checked> As I type</label>
-		</div>
-	</div>
-
-	<div class="col i i-options">
-<textarea id="options" rows="15" cols="80" spellcheck="false" tabindex="1">// Documentation of the options is available at https://github.com/mishoo/UglifyJS2
-{
+  <div class="col i i-options" data-label="Options">
+    <textarea id="options" spellcheck="false" tabindex="1">{
   parse: {
     bare_returns     : false,
     ecma             : 8,
@@ -134,44 +142,32 @@
     wrap_iife        : false
   },
   wrap: false
-}
-</textarea>
-		<div class="tools">
-			<button class="btn-main" id="btn-options-save" tabindex="2">Save</button>
-			<button id="btn-options-reset" tabindex="2">Use defaults</button>
-		</div>
-	</div>
+}</textarea>
+    <div class="tools">
+      <button class="btn-main" id="btn-options-save" tabindex="2">Save</button>
+      <button id="btn-options-reset" tabindex="2">Use defaults</button>
+    </div>
+  </div>
 
-	<div class="col i i-info">
-		<p>
-			<strong>UglifyJS 3</strong> is an excellent tool to help you minify your JavaScript!
-			It's a tried and tested tool, used by libraries such as jQuery.</p>
+  <div class="col i i-output" data-label="Output">
+    <div class="output-bar">
+      <span id="stats"></span>
+      <button id="btn-copy" class="btn-icon" title="Copy to clipboard">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11H2a1 1 0 01-1-1V2a1 1 0 011-1h8a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Copy
+      </button>
+      <button id="btn-download" class="btn-icon" title="Download minified file">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 14h8M4 10l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download
+      </button>
+    </div>
+    <textarea id="out" spellcheck="false" tabindex="3" placeholder="Minified output appears here…" readonly></textarea>
+  </div>
 
-		<p>
-			This is a simple wrapper for the browser around the minifier;
-			the hard work is done by the Uglify team.
-			If you need an automated solution, I suggest checking out the
-			<a href="https://github.com/mishoo/UglifyJS2">source code</a>, intended for Node.JS.</p>
+  <div class="col i i-error" data-label="Error">
+    <pre id="error"></pre>
+  </div>
 
-		<p>
-			Do you want to help improve this tool? It's on <a href="https://github.com/Skalman/UglifyJS-online">Github</a>.</p>
-
-		<p><small>
-			This wrapper for the browser was created by <a href="https://danwolff.se/">Dan Wolff</a>.
-
-			Version <code id="version">uglify-es 3.3.9</code>.</small></p>
-
-	</div>
-
-	<div class="col i i-output">
-		<p>
-			The minified output (<span id="stats"></span>)</p>
-		<textarea id="out" spellcheck="false" tabindex="3"></textarea>
-	</div>
-
-	<div class="col i i-error">
-		<pre id="error"></pre>
-	</div>
 </div>
 
 <script src="uglify/lib/minify.js"></script>
@@ -183,9 +179,6 @@
 <script src="uglify/lib/output.js"></script>
 <script src="uglify/lib/compress.js"></script>
 <script src="uglify/lib/propmangle.js"></script>
-<!-- The following aren't needed: sourcemap.js, mozilla-ast.js -->
-
 <script src="script.js"></script>
-
 </body>
 </html>
