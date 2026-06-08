@@ -5,47 +5,70 @@ var default_options = {};
 function $(id) { return document.getElementById(id); }
 
 var uglify_options;
-var $options      = $('options');
-var $out          = $('out');
-var $in           = $('in');
-var $error        = $('error');
-var $stats        = $('stats');
+var $options           = $('options');
+var $out               = $('out');
+var $in                = $('in');
+var $error             = $('error');
+var $errorPane         = $('error-pane');
+var $stats             = $('stats');
+var $btn_options       = $('btn-options');
+var $btn_go            = $('btn-go');
+var $btn_copy          = $('btn-copy');
+var $btn_download      = $('btn-download');
+var $cb_as_i_type      = $('cb-as-i-type');
+var $fileUpload        = $('file-upload');
+var $dropZone          = $('drop-zone');
+var $modalOverlay      = $('modal-overlay');
 
-var $body         = document.body;
-var $btn_options  = $('btn-options');
-var $btn_go       = $('btn-go');
-var $btn_copy     = $('btn-copy');
-var $btn_download = $('btn-download');
-var $cb_as_i_type = $('cb-as-i-type');
-var $fileUpload   = $('file-upload');
-var $dropZone     = $('drop-zone');
+// ── Navigation ────────────────────────────
+$('header-link').onclick = function(e) {
+  e.preventDefault();
+  go_to_start();
+};
 
-$('header-link').onclick    = go_to_start;
-$btn_go.onclick             = go;
-$btn_options.onclick        = show_options;
-$('btn-options-save').onclick  = set_options;
-$('btn-options-reset').onclick = reset_options;
+$btn_options.onclick = function() {
+  $modalOverlay.classList.add('open');
+};
+$('btn-options-close').onclick = function() {
+  $modalOverlay.classList.remove('open');
+};
+$modalOverlay.onclick = function(e) {
+  if (e.target === $modalOverlay) $modalOverlay.classList.remove('open');
+};
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && $modalOverlay.classList.contains('open')) {
+    $modalOverlay.classList.remove('open');
+  }
+});
+
+// ── Core ──────────────────────────────────
+$btn_go.onclick = go;
+$('btn-options-save').onclick   = set_options;
+$('btn-options-reset').onclick  = reset_options;
 $in.oninput = $in.onkeyup = $in.onblur = $in.onfocus = go_ait;
 $cb_as_i_type.onclick = set_options_ait;
 $out.onfocus = select_text;
 
+// ── Copy ──────────────────────────────────
+var $copyText = $btn_copy.querySelector('.btn-text');
 $btn_copy.onclick = function() {
   if (!$out.value) return;
   navigator.clipboard.writeText($out.value).then(function() {
     $btn_copy.classList.add('copied');
-    $btn_copy.childNodes[$btn_copy.childNodes.length - 1].textContent = ' Copied!';
+    if ($copyText) $copyText.textContent = 'Copied!';
     setTimeout(function() {
       $btn_copy.classList.remove('copied');
-      $btn_copy.childNodes[$btn_copy.childNodes.length - 1].textContent = ' Copy';
+      if ($copyText) $copyText.textContent = 'Copy';
     }, 1800);
   });
 };
 
+// ── Download ──────────────────────────────
 $btn_download.onclick = function() {
   if (!$out.value) return;
-  var filename = (current_filename
+  var filename = current_filename
     ? current_filename.replace(/\.js$/i, '.min.js')
-    : 'output.min.js');
+    : 'output.min.js';
   var blob = new Blob([$out.value], { type: 'text/javascript' });
   var url  = URL.createObjectURL(blob);
   var a    = document.createElement('a');
@@ -57,6 +80,7 @@ $btn_download.onclick = function() {
   URL.revokeObjectURL(url);
 };
 
+// ── File upload ───────────────────────────
 var current_filename = '';
 
 function load_file(file) {
@@ -76,44 +100,23 @@ $fileUpload.onchange = function() {
   this.value = '';
 };
 
-var $inputCol = $in.closest('.col');
-
-$inputCol.addEventListener('dragover', function(e) {
+var $inputPanel = $in.closest('.panel');
+$inputPanel.addEventListener('dragover', function(e) {
   e.preventDefault();
   $dropZone.classList.add('active');
 });
-$inputCol.addEventListener('dragleave', function(e) {
-  if (!$inputCol.contains(e.relatedTarget)) {
-    $dropZone.classList.remove('active');
-  }
+$inputPanel.addEventListener('dragleave', function(e) {
+  if (!$inputPanel.contains(e.relatedTarget)) $dropZone.classList.remove('active');
 });
-$inputCol.addEventListener('drop', function(e) {
+$inputPanel.addEventListener('drop', function(e) {
   e.preventDefault();
   $dropZone.classList.remove('active');
-  var file = e.dataTransfer.files[0];
-  load_file(file);
+  load_file(e.dataTransfer.files[0]);
 });
 
+// ── Options ───────────────────────────────
 var default_options_text;
 set_options_initial();
-
-function hide(class_name) {
-  var names = class_name.split(' ');
-  var cur = ' ' + $body.className + ' ';
-  for (var i = 0; i < names.length; i++) {
-    while (cur.indexOf(' ' + names[i] + ' ') >= 0) {
-      cur = cur.replace(' ' + names[i] + ' ', ' ');
-    }
-  }
-  $body.className = cur.replace(/^\s+|\s+$/g, '');
-}
-
-function show(class_name) { $body.className += ' ' + class_name; }
-
-function show_options() {
-  show('s-options');
-  hide('s-input');
-}
 
 function get_options(value) {
   return new Function('return (' + (value || $options.value) + ');')();
@@ -130,8 +133,7 @@ function set_options() {
         localStorage.setItem('uglify-options', $options.value);
     } catch (e) {}
     go(true);
-    show('s-input');
-    hide('s-options');
+    $modalOverlay.classList.remove('open');
     return true;
   } catch (e) {
     if (e instanceof JS_Parse_Error) {
@@ -175,6 +177,7 @@ function set_options_initial() {
   }
 }
 
+// ── Minify ────────────────────────────────
 function encodeHTML(str) {
   return (str + '')
     .replace(/&/g, '&amp;')
@@ -196,12 +199,11 @@ function go(throw_on_error) {
     if (!input || input === $in.textContent) { go_to_start(); return; }
     var res = minify(input, uglify_options);
     if (res.error) throw res.error;
-    hide('s-error');
-    show('s-output');
+    $errorPane.classList.remove('visible');
+    $out.style.display = '';
     $out.value = res.code || '';
     var saved = ((1 - res.code.length / input.length) * 100 || 0).toFixed(1);
-    var statsText = res.code.length.toLocaleString() + ' bytes · saved ' + saved + '%';
-    $stats.textContent = statsText;
+    $stats.textContent = res.code.length.toLocaleString() + ' bytes · −' + saved + '%';
   }
 }
 
@@ -221,16 +223,16 @@ function go_ait() {
 }
 
 function show_error(e, param) {
-  console.error('Error', e);
-  hide('s-output');
-  show('s-error');
+  $out.style.display = 'none';
+  $errorPane.classList.add('visible');
+  $stats.textContent = '';
   if (e instanceof JS_Parse_Error) {
-    var input  = param;
-    var lines  = input.split('\n');
-    var line   = lines[e.line - 1];
+    var input = param;
+    var lines = input.split('\n');
+    var line  = lines[e.line - 1];
     e = 'Parse error: <strong>' + encodeHTML(e.message) + '</strong>\n' +
       '<small>Line ' + e.line + ', column ' + (e.col + 1) + '</small>\n\n' +
-      (lines[e.line-2] ? (e.line - 1) + ': ' + encodeHTML(lines[e.line-2]) + '\n' : '') +
+      (lines[e.line - 2] ? (e.line - 1) + ': ' + encodeHTML(lines[e.line - 2]) + '\n' : '') +
       e.line + ': ' +
         encodeHTML(line.substr(0, e.col)) +
         '<mark>' + encodeHTML(line.substr(e.col, 1) || ' ') + '</mark>' +
@@ -246,8 +248,10 @@ function show_error(e, param) {
 
 function go_to_start() {
   clearTimeout(ait_timeout);
-  hide('s-options s-error s-output');
-  show('s-input');
+  $out.value = '';
+  $out.style.display = '';
+  $errorPane.classList.remove('visible');
+  $stats.textContent = '';
   return false;
 }
 
