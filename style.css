@@ -201,13 +201,21 @@ html, body {
   color: #fca5a5;
 }
 
-/* ── Stats ───────────────────────────────── */
+/* ── Stats bar ───────────────────────────── */
+.stats-bar {
+  display: none;
+  padding: 0.3rem 0.75rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.stats-bar.visible { display: block; }
+
 #stats {
   font-size: 0.72rem;
   font-family: var(--mono);
   color: var(--success);
   font-weight: 500;
-  margin-right: 0.25rem;
   transition: opacity 0.2s;
 }
 

@@ -52,7 +52,6 @@
     <div class="panel-bar">
       <span class="panel-label">Output</span>
       <div class="bar-actions">
-        <span id="stats"></span>
         <button class="btn btn-ghost" id="btn-copy" title="Copy to clipboard">
           <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M3 11H2a1 1 0 01-1-1V2a1 1 0 011-1h8a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
           <span class="btn-text">Copy</span>
@@ -63,7 +62,10 @@
         </button>
       </div>
     </div>
-    <textarea id="out" spellcheck="false" tabindex="3" placeholder="Minified output appears here…" readonly></textarea>
+    <div class="stats-bar" id="stats-bar">
+      <span id="stats"></span>
+    </div>
+    <textarea id="out" spellcheck="false" tabindex="3" placeholder="Minified output appears here..." readonly></textarea>
     <div class="error-pane" id="error-pane">
       <pre id="error"></pre>
     </div>
