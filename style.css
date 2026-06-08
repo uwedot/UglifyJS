@@ -271,6 +271,14 @@ label.btn input[type="file"] {
   background: rgba(52, 211, 153, 0.07);
 }
 
+/* Disabled output buttons */
+#btn-copy:disabled,
+#btn-download:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 /* ── Checkbox ────────────────────────────── */
 .ait-label {
   display: flex;
@@ -412,30 +420,50 @@ pre { word-wrap: break-word; overflow-wrap: break-word; }
 
 /* ── Mobile ──────────────────────────────── */
 @media (max-width: 680px) {
-  html, body { height: auto; overflow: auto; }
+  :root { --header-h: 44px; }
 
-  .header { height: 44px; }
+  html, body { height: 100%; overflow: hidden; }
+
   .header-tagline { display: none; }
 
+  /* Keep side-by-side, fill full viewport height */
   .workspace {
-    grid-template-columns: 1fr;
-    height: auto;
-    background: var(--border);
-    min-height: calc(100vh - 44px);
+    grid-template-columns: 1fr 1fr;
+    height: calc(100vh - var(--header-h));
+    height: calc(100dvh - var(--header-h));
   }
 
-  .panel { height: auto; }
+  .panel {
+    height: 100%;
+    min-height: 0;
+  }
 
+  /* Textareas fill remaining panel space */
   #in, #out {
-    height: 48vw;
-    min-height: 160px;
-    flex: none;
-    font-size: 0.75rem;
-    padding: 0.75rem;
+    flex: 1;
+    min-height: 0;
+    font-size: 0.72rem;
+    padding: 0.5rem;
+    line-height: 1.6;
   }
 
-  .panel-footer { padding: 0.45rem 0.65rem; }
-  .panel-bar { padding: 0 0.65rem; }
+  /* Tighten bars so more space goes to textarea */
+  .panel-bar {
+    padding: 0 0.5rem;
+    height: 32px;
+  }
+
+  .panel-footer {
+    padding: 0.35rem 0.5rem;
+    gap: 0.35rem;
+  }
+
+  /* Shrink buttons slightly on narrow screens */
+  .btn {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.5rem;
+  }
+  .btn-primary { padding: 0.3rem 0.65rem; }
 
   .modal { max-height: 88vh; }
   .modal-overlay { padding: 0.75rem; }

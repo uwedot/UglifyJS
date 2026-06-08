@@ -20,6 +20,13 @@ var $fileUpload        = $('file-upload');
 var $dropZone          = $('drop-zone');
 var $modalOverlay      = $('modal-overlay');
 
+// ── Output button state ───────────────────
+function set_output_buttons(enabled) {
+  $btn_copy.disabled     = !enabled;
+  $btn_download.disabled = !enabled;
+}
+set_output_buttons(false);
+
 // ── Navigation ────────────────────────────
 $('header-link').onclick = function(e) {
   e.preventDefault();
@@ -45,7 +52,8 @@ document.addEventListener('keydown', function(e) {
 $btn_go.onclick = go;
 $('btn-options-save').onclick   = set_options;
 $('btn-options-reset').onclick  = reset_options;
-$in.oninput = $in.onkeyup = $in.onblur = $in.onfocus = go_ait;
+$in.oninput = function() { go_to_start(); go_ait(); };
+$in.onkeyup = $in.onblur = $in.onfocus = go_ait;
 $cb_as_i_type.onclick = set_options_ait;
 $out.onfocus = select_text;
 
@@ -202,8 +210,8 @@ function go(throw_on_error) {
     $errorPane.classList.remove('visible');
     $out.style.display = '';
     $out.value = res.code || '';
-    var saved = ((1 - res.code.length / input.length) * 100 || 0).toFixed(1);
-    $stats.textContent = res.code.length.toLocaleString() + ' bytes · −' + saved + '%';
+    set_output_buttons(!!res.code);
+    $stats.textContent = input.length.toLocaleString() + ' → ' + res.code.length.toLocaleString() + ' bytes';
   }
 }
 
@@ -226,6 +234,7 @@ function show_error(e, param) {
   $out.style.display = 'none';
   $errorPane.classList.add('visible');
   $stats.textContent = '';
+  set_output_buttons(false);
   if (e instanceof JS_Parse_Error) {
     var input = param;
     var lines = input.split('\n');
@@ -248,7 +257,9 @@ function show_error(e, param) {
 
 function go_to_start() {
   clearTimeout(ait_timeout);
+  last_input = null;
   $out.value = '';
+  set_output_buttons(false);
   $out.style.display = '';
   $errorPane.classList.remove('visible');
   $stats.textContent = '';
