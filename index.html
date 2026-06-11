@@ -1,88 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UglifyJS 3 — JavaScript Minifier</title>
-  <link rel="shortcut icon" href="favicon.ico">
+  <title>UglifyJS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="header">
-  <a class="logo" id="header-link" href="./">
-    <span class="logo-icon">{}</span>
-    <span class="logo-name">UglifyJS</span>
-    <span class="logo-ver">3</span>
-  </a>
-  <span class="header-tagline">JavaScript Minifier</span>
-</header>
+  <!-- ── Header ── -->
+  <header class="header">
+    <a class="logo" href="#" id="header-link">
+      <span class="logo-icon">{}</span>
+      <span class="logo-name">UglifyJS</span>
+      <span class="logo-ver">v3</span>
+    </a>
+    <span class="header-tagline">JavaScript minifier</span>
+    <button class="btn btn-ghost" id="btn-options" title="Minifier options">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M8 2v1.5M8 12.5V14M2 8h1.5M12.5 8H14M3.515 3.515l1.06 1.06M11.425 11.425l1.06 1.06M3.515 12.485l1.06-1.06M11.425 4.575l1.06-1.06" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      Options
+    </button>
+  </header>
 
-<main class="workspace">
+  <!-- ── Workspace ── -->
+  <main class="workspace">
 
-  <!-- Input panel -->
-  <section class="panel panel-input">
-    <div class="panel-bar">
-      <span class="panel-label">Input</span>
-      <div class="bar-actions">
-        <label class="btn btn-ghost" tabindex="0">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 6l4-5 4 5M2 12v2a1 1 0 001 1h10a1 1 0 001-1v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Upload
-          <input type="file" id="file-upload" accept=".js" tabindex="-1">
-        </label>
-        <button class="btn btn-ghost" id="btn-options">Options</button>
+    <!-- Input panel -->
+    <section class="panel" id="input-panel">
+      <div class="panel-bar">
+        <span class="panel-label">Input</span>
+        <div class="bar-actions">
+          <label class="btn btn-ghost" title="Upload a .js file">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+              <path d="M8 10V3M5 6l3-3 3 3M3 13h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Upload
+            <input type="file" accept=".js" id="file-upload">
+          </label>
+        </div>
       </div>
-    </div>
-    <div class="drop-zone" id="drop-zone">Drop .js file here</div>
-    <textarea id="in" spellcheck="false" tabindex="1" autofocus placeholder="Paste JavaScript here, or upload a file…"></textarea>
-    <div class="panel-footer">
-      <label class="ait-label">
-        <input id="cb-as-i-type" type="checkbox" checked>
-        Auto-minify
-      </label>
-      <button class="btn btn-primary" id="btn-go" tabindex="2">Minify</button>
-    </div>
-  </section>
 
-  <!-- Output panel -->
-  <section class="panel panel-output">
-    <div class="panel-bar">
-      <span class="panel-label">Output</span>
-      <div class="bar-actions">
-        <button class="btn btn-ghost" id="btn-copy" title="Copy to clipboard">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M3 11H2a1 1 0 01-1-1V2a1 1 0 011-1h8a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          <span class="btn-text">Copy</span>
-        </button>
-        <button class="btn btn-ghost" id="btn-download" title="Download minified file">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 14h8M4 10l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Download
+      <textarea
+        id="in"
+        spellcheck="false"
+        autocorrect="off"
+        autocapitalize="off"
+        placeholder="Paste JavaScript here…"></textarea>
+
+      <div class="drop-zone" id="drop-zone">Drop .js file to load</div>
+
+      <div class="panel-footer">
+        <button class="btn btn-primary" id="btn-go">Minify</button>
+      </div>
+    </section>
+
+    <!-- Output panel -->
+    <section class="panel" id="output-panel">
+      <div class="panel-bar">
+        <span class="panel-label">Output</span>
+        <div class="stats-bar" id="stats-bar">
+          <span id="stats"></span>
+        </div>
+      </div>
+
+      <div class="error-pane" id="error-pane">
+        <pre id="error"></pre>
+      </div>
+
+      <textarea
+        id="out"
+        spellcheck="false"
+        readonly
+        placeholder="Minified output will appear here…"></textarea>
+
+      <div class="panel-footer">
+        <span class="panel-footer-spacer"></span>
+        <div class="bar-actions">
+          <button class="btn btn-ghost" id="btn-copy" disabled>
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+              <rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M11 5V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+            <span class="btn-text">Copy</span>
+          </button>
+          <button class="btn btn-ghost" id="btn-download" disabled>
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+              <path d="M8 2v8M5 7l3 3 3-3M3 13h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Save
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Options modal ── -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-label="Minifier options">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Minifier options</span>
+        <button class="btn-close" id="btn-options-close" aria-label="Close options">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
         </button>
       </div>
-    </div>
-    <div class="stats-bar" id="stats-bar">
-      <span id="stats"></span>
-    </div>
-    <textarea id="out" spellcheck="false" tabindex="3" placeholder="Minified output appears here..." readonly></textarea>
-    <div class="error-pane" id="error-pane">
-      <pre id="error"></pre>
-    </div>
-  </section>
-
-</main>
-
-<!-- Options Modal -->
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">Options</span>
-      <button class="btn-close" id="btn-options-close" aria-label="Close">
-        <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-    <textarea id="options" spellcheck="false" tabindex="1">{
+      <textarea id="options" spellcheck="false">{
   parse: {
     bare_returns     : false,
     expression       : false,
@@ -165,22 +195,22 @@
   },
   wrap: false
 }</textarea>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" id="btn-options-reset">Use defaults</button>
-      <button class="btn btn-primary" id="btn-options-save">Save</button>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="btn-options-reset">Reset to defaults</button>
+        <button class="btn btn-primary" id="btn-options-save">Apply</button>
+      </div>
     </div>
   </div>
-</div>
 
-<script src="lib/minify.js"></script>
-<script src="lib/utils.js"></script>
-<script src="lib/ast.js"></script>
-<script src="lib/parse.js"></script>
-<script src="lib/transform.js"></script>
-<script src="lib/scope.js"></script>
-<script src="lib/output.js"></script>
-<script src="lib/compress.js"></script>
-<script src="lib/propmangle.js"></script>
-<script src="script.js" defer></script>
+  <script src="lib/minify.js"></script>
+  <script src="lib/utils.js"></script>
+  <script src="lib/ast.js"></script>
+  <script src="lib/parse.js"></script>
+  <script src="lib/transform.js"></script>
+  <script src="lib/scope.js"></script>
+  <script src="lib/output.js"></script>
+  <script src="lib/compress.js"></script>
+  <script src="lib/propmangle.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

@@ -16,7 +16,6 @@ var $btn_options       = $('btn-options');
 var $btn_go            = $('btn-go');
 var $btn_copy          = $('btn-copy');
 var $btn_download      = $('btn-download');
-var $cb_as_i_type      = $('cb-as-i-type');
 var $fileUpload        = $('file-upload');
 var $dropZone          = $('drop-zone');
 var $modalOverlay      = $('modal-overlay');
@@ -53,9 +52,7 @@ document.addEventListener('keydown', function(e) {
 $btn_go.onclick = go;
 $('btn-options-save').onclick   = set_options;
 $('btn-options-reset').onclick  = reset_options;
-$in.oninput = function() { go_to_start(); go_ait(); };
-$in.onkeyup = $in.onblur = $in.onfocus = go_ait;
-$cb_as_i_type.onclick = set_options_ait;
+$in.oninput = go_to_start;
 $out.onfocus = select_text;
 
 // ── Copy ──────────────────────────────────
@@ -98,7 +95,6 @@ function load_file(file) {
   var reader = new FileReader();
   reader.onload = function(e) {
     $in.value = e.target.result;
-    go_ait();
     $in.focus();
   };
   reader.readAsText(file);
@@ -161,22 +157,12 @@ function reset_options() {
   set_options();
 }
 
-function set_options_ait() {
-  try {
-    if ($cb_as_i_type.checked)
-      localStorage.removeItem('uglify-options-disable-ait');
-    else
-      localStorage.setItem('uglify-options-disable-ait', 1);
-  } catch (e) {}
-}
-
 function set_options_initial() {
   default_options_text = $options.textContent || $options.innerText;
   default_options = get_options(default_options_text);
   try {
     var options_text = localStorage.getItem('uglify-options');
     if (options_text) $options.value = options_text;
-    $cb_as_i_type.checked = !localStorage.getItem('uglify-options-disable-ait');
   } catch (e) {}
   try {
     uglify_options = get_options();
@@ -217,21 +203,6 @@ function go(throw_on_error) {
   }
 }
 
-var ait_timeout;
-var ait_last_duration = 50;
-function go_ait() {
-  if (!$cb_as_i_type.checked) return;
-  var input = $in.value;
-  if (input === last_input) return;
-  last_input = input;
-  clearTimeout(ait_timeout);
-  ait_timeout = setTimeout(function() {
-    var start = new Date();
-    go();
-    ait_last_duration = new Date() - start;
-  }, ait_last_duration);
-}
-
 function show_error(e, param) {
   $out.style.display = 'none';
   $errorPane.classList.add('visible');
@@ -259,7 +230,6 @@ function show_error(e, param) {
 }
 
 function go_to_start() {
-  clearTimeout(ait_timeout);
   last_input = null;
   $out.value = '';
   set_output_buttons(false);
