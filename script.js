@@ -10,8 +10,8 @@ var $out               = $('out');
 var $in                = $('in');
 var $error             = $('error');
 var $errorPane         = $('error-pane');
-var $stats             = $('stats');
-var $statsBar          = $('stats-bar');
+var $statsIn           = $('stats-in');
+var $statsOut          = $('stats-out');
 var $btn_options       = $('btn-options');
 var $btn_go            = $('btn-go');
 var $btn_copy          = $('btn-copy');
@@ -198,16 +198,16 @@ function go(throw_on_error) {
     $out.style.display = '';
     $out.value = res.code || '';
     set_output_buttons(!!res.code);
-    $stats.textContent = input.length.toLocaleString() + ' to ' + res.code.length.toLocaleString() + ' bytes';
-    $statsBar.classList.add('visible');
+    $statsIn.textContent  = input.length.toLocaleString() + ' bytes';
+    $statsOut.textContent = res.code.length.toLocaleString() + ' bytes';
   }
 }
 
 function show_error(e, param) {
   $out.style.display = 'none';
   $errorPane.classList.add('visible');
-  $stats.textContent = '';
-  $statsBar.classList.remove('visible');
+  $statsIn.textContent  = '';
+  $statsOut.textContent = '';
   set_output_buttons(false);
   if (e instanceof JS_Parse_Error) {
     var input = param;
@@ -235,8 +235,8 @@ function go_to_start() {
   set_output_buttons(false);
   $out.style.display = '';
   $errorPane.classList.remove('visible');
-  $stats.textContent = '';
-  $statsBar.classList.remove('visible');
+  $statsIn.textContent  = '';
+  $statsOut.textContent = '';
   return false;
 }
 

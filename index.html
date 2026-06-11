@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>UglifyJS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,6 +35,7 @@
     <section class="panel" id="input-panel">
       <div class="panel-bar">
         <span class="panel-label">Input</span>
+        <span class="panel-bytes" id="stats-in"></span>
         <div class="bar-actions">
           <label class="btn btn-ghost" title="Upload a .js file">
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
@@ -64,9 +65,7 @@
     <section class="panel" id="output-panel">
       <div class="panel-bar">
         <span class="panel-label">Output</span>
-        <div class="stats-bar" id="stats-bar">
-          <span id="stats"></span>
-        </div>
+        <span class="panel-bytes" id="stats-out"></span>
       </div>
 
       <div class="error-pane" id="error-pane">
