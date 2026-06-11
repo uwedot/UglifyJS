@@ -19,13 +19,22 @@
       <span class="logo-ver">v3</span>
     </a>
     <span class="header-tagline">JavaScript minifier</span>
-    <button class="btn btn-ghost" id="btn-options" title="Minifier options">
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-        <path d="M8 2v1.5M8 12.5V14M2 8h1.5M12.5 8H14M3.515 3.515l1.06 1.06M11.425 11.425l1.06 1.06M3.515 12.485l1.06-1.06M11.425 4.575l1.06-1.06" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-      </svg>
-      Options
-    </button>
+    <div class="header-actions">
+      <label class="btn btn-ghost" title="Upload a .js file">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+          <path d="M8 10V3M5 6l3-3 3 3M3 13h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Upload
+        <input type="file" accept=".js" id="file-upload">
+      </label>
+      <button class="btn btn-ghost" id="btn-options" title="Minifier options">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M8 2v1.5M8 12.5V14M2 8h1.5M12.5 8H14M3.515 3.515l1.06 1.06M11.425 11.425l1.06 1.06M3.515 12.485l1.06-1.06M11.425 4.575l1.06-1.06" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        Options
+      </button>
+    </div>
   </header>
 
   <!-- ── Workspace ── -->
@@ -36,15 +45,6 @@
       <div class="panel-bar">
         <span class="panel-label">Input</span>
         <span class="panel-bytes" id="stats-in"></span>
-        <div class="bar-actions">
-          <label class="btn btn-ghost" title="Upload a .js file">
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-              <path d="M8 10V3M5 6l3-3 3 3M3 13h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Upload
-            <input type="file" accept=".js" id="file-upload">
-          </label>
-        </div>
       </div>
 
       <textarea
