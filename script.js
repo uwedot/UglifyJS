@@ -19,6 +19,35 @@ var $btn_download      = $('btn-download');
 var $fileUpload        = $('file-upload');
 var $dropZone          = $('drop-zone');
 var $modalOverlay      = $('modal-overlay');
+var $toastContainer    = $('toast-container');
+
+// ── Toast ─────────────────────────────────
+var ICONS = {
+  success: '<svg class="toast-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  error:   '<svg class="toast-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5M8 10.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
+  info:    '<svg class="toast-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 7.5v3M8 5.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>'
+};
+
+function show_toast(msg, type, duration) {
+  type     = type     || 'success';
+  duration = duration || 2200;
+
+  var el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = ICONS[type] + '<span>' + msg + '</span>';
+  $toastContainer.appendChild(el);
+
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() { el.classList.add('show'); });
+  });
+
+  setTimeout(function() {
+    el.classList.remove('show');
+    setTimeout(function() {
+      if (el.parentNode) el.parentNode.removeChild(el);
+    }, 200);
+  }, duration);
+}
 
 // ── Output button state ───────────────────
 function set_output_buttons(enabled) {
@@ -50,9 +79,9 @@ document.addEventListener('keydown', function(e) {
 
 // ── Core ──────────────────────────────────
 $btn_go.onclick = go;
-$('btn-options-save').onclick   = set_options;
-$('btn-options-reset').onclick  = reset_options;
-$in.oninput = go_to_start;
+$('btn-options-save').onclick  = set_options;
+$('btn-options-reset').onclick = reset_options;
+$in.oninput = function() { last_minified = null; go_to_start(); };
 $out.onfocus = select_text;
 
 // ── Copy ──────────────────────────────────
@@ -62,10 +91,13 @@ $btn_copy.onclick = function() {
   navigator.clipboard.writeText($out.value).then(function() {
     $btn_copy.classList.add('copied');
     if ($copyText) $copyText.textContent = 'Copied!';
+    show_toast('Copied to clipboard', 'success');
     setTimeout(function() {
       $btn_copy.classList.remove('copied');
       if ($copyText) $copyText.textContent = 'Copy';
     }, 1800);
+  }).catch(function() {
+    show_toast('Copy failed', 'error');
   });
 };
 
@@ -84,18 +116,26 @@ $btn_download.onclick = function() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+  show_toast('Saved ' + filename, 'info');
 };
 
 // ── File upload ───────────────────────────
 var current_filename = '';
 
 function load_file(file) {
-  if (!file || !file.name.match(/\.js$/i)) return;
+  if (!file) return;
+  if (!file.name.match(/\.js$/i)) {
+    show_toast('Only .js files are supported', 'error');
+    return;
+  }
   current_filename = file.name;
   var reader = new FileReader();
   reader.onload = function(e) {
     $in.value = e.target.result;
+    last_minified = null;
+    go_to_start();
     $in.focus();
+    show_toast('Loaded ' + file.name, 'info');
   };
   reader.readAsText(file);
 }
@@ -139,6 +179,7 @@ function set_options() {
     } catch (e) {}
     go(true);
     $modalOverlay.classList.remove('open');
+    show_toast('Options applied', 'success');
     return true;
   } catch (e) {
     if (e instanceof JS_Parse_Error) {
@@ -155,6 +196,7 @@ function set_options() {
 function reset_options() {
   $options.value = default_options_text;
   set_options();
+  show_toast('Options reset to defaults', 'info');
 }
 
 function set_options_initial() {
@@ -181,8 +223,10 @@ function encodeHTML(str) {
 }
 
 var last_input;
+var last_minified;
 function go(throw_on_error) {
   var input = $in.value;
+  if (input === last_minified) return;
   last_input = input;
   if (throw_on_error === true) {
     main();
@@ -197,7 +241,10 @@ function go(throw_on_error) {
     $errorPane.classList.remove('visible');
     $out.style.display = '';
     $out.value = res.code || '';
+    last_minified = input;
     set_output_buttons(!!res.code);
+    var saved = Math.round((1 - res.code.length / input.length) * 100);
+    show_toast('Minified — ' + saved + '% smaller', 'success');
     $statsIn.textContent  = input.length.toLocaleString() + ' bytes';
     $statsOut.textContent = res.code.length.toLocaleString() + ' bytes';
   }
@@ -209,10 +256,12 @@ function show_error(e, param) {
   $statsIn.textContent  = '';
   $statsOut.textContent = '';
   set_output_buttons(false);
+  var msg = 'Parse error';
   if (e instanceof JS_Parse_Error) {
     var input = param;
     var lines = input.split('\n');
     var line  = lines[e.line - 1];
+    msg = 'Line ' + e.line + ': ' + e.message;
     e = 'Parse error: <strong>' + encodeHTML(e.message) + '</strong>\n' +
       '<small>Line ' + e.line + ', column ' + (e.col + 1) + '</small>\n\n' +
       (lines[e.line - 2] ? (e.line - 1) + ': ' + encodeHTML(lines[e.line - 2]) + '\n' : '') +
@@ -222,11 +271,13 @@ function show_error(e, param) {
         encodeHTML(line.substr(e.col + 1)) + '\n' +
       (lines[e.line] ? (e.line + 1) + ': ' + encodeHTML(lines[e.line]) : '');
   } else if (e instanceof Error) {
+    msg = e.message;
     e = e.name + ': <strong>' + encodeHTML(e.message) + '</strong>';
   } else {
     e = '<strong>' + encodeHTML(e) + '</strong>';
   }
   $error.innerHTML = e;
+  show_toast(msg, 'error', 3500);
 }
 
 function go_to_start() {

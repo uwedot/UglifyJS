@@ -1,4 +1,4 @@
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 :root {
   --bg:           #0a0a0a;
@@ -271,7 +271,7 @@ html, body {
   border-color: var(--border2);
   color: var(--text-mid);
   font-weight: 500;
-  padding: 0.36rem 0.85rem;
+  padding: 0.36rem 1.4rem;
   letter-spacing: -0.01em;
 }
 .btn-primary:hover {
@@ -427,6 +427,54 @@ mark {
 }
 small { opacity: 0.5; }
 pre { word-wrap: break-word; overflow-wrap: break-word; }
+
+/* ── Toast ───────────────────────────────── */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: var(--ui);
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem 0.5rem 0.75rem;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.toast-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.toast.success { border-color: rgba(74, 222, 128, 0.25); }
+.toast.success .toast-icon { color: var(--success); }
+.toast.error   { border-color: rgba(248, 113, 113, 0.25); }
+.toast.error   .toast-icon { color: var(--danger); }
+.toast.info    { border-color: var(--border2); }
+.toast.info    .toast-icon { color: var(--text-mid); }
 
 /* ── Scrollbars ──────────────────────────── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
