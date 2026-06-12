@@ -75,20 +75,8 @@ body {
   color: var(--accent);
 }
 
-.logo-icon {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  font-weight: 500;
-  color: var(--accent);
-  background: var(--accent-glow);
-  border: 1px solid var(--accent-border);
-  border-radius: 3px;
-  padding: 2px 7px;
-  letter-spacing: -0.02em;
-}
-
 .logo-name {
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: -0.025em;
   transition: color 0.12s;
@@ -730,11 +718,6 @@ pre {
 @media (max-width: 480px) {
   .header {
     padding: 0 10px;
-  }
-
-  .logo-icon {
-    font-size: 0.65rem;
-    padding: 1px 6px;
   }
 
   .logo-name {
