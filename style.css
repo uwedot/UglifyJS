@@ -76,7 +76,7 @@ body {
 }
 
 .logo-name {
-  font-size: 1rem;
+  font-size: 15px;
   font-weight: 600;
   letter-spacing: -0.025em;
   transition: color 0.12s;
@@ -721,7 +721,7 @@ pre {
   }
 
   .logo-name {
-    font-size: 0.8rem;
+    font-size: 15px;
   }
 
   .logo-ver {
