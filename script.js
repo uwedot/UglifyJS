@@ -139,8 +139,6 @@ function load_file(file) {
         document.activeElement.blur();
       }
     }
-
-    show_toast('Loaded ' + file.name, 'info');
   };
   reader.readAsText(file);
 }
@@ -228,7 +226,10 @@ function encodeHTML(str) {
 var last_minified;
 function go(throw_on_error) {
   var input = $in.value;
-  if (input === last_minified) return;
+  if (input === last_minified) {
+    show_toast('Already minified - no changes detected', 'info');
+    return;
+  }
   if (throw_on_error === true) {
     main();
   } else {
