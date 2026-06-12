@@ -21,7 +21,10 @@ var $dropZone          = $('drop-zone');
 var $modalOverlay      = $('modal-overlay');
 var $toastContainer    = $('toast-container');
 
-// ── Toast ─────────────────────────────────
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
 var ICONS = {
   success: '<svg class="toast-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   error:   '<svg class="toast-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5M8 10.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
@@ -49,14 +52,12 @@ function show_toast(msg, type, duration) {
   }, duration);
 }
 
-// ── Output button state ───────────────────
 function set_output_buttons(enabled) {
   $btn_copy.disabled     = !enabled;
   $btn_download.disabled = !enabled;
 }
 set_output_buttons(false);
 
-// ── Navigation ────────────────────────────
 $('header-link').onclick = function(e) {
   e.preventDefault();
   go_to_start();
@@ -77,14 +78,12 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-// ── Core ──────────────────────────────────
 $btn_go.onclick = go;
 $('btn-options-save').onclick  = set_options;
 $('btn-options-reset').onclick = reset_options;
 $in.oninput = function() { last_minified = null; go_to_start(); };
 $out.onfocus = select_text;
 
-// ── Copy ──────────────────────────────────
 var $copyText = $btn_copy.querySelector('.btn-text');
 $btn_copy.onclick = function() {
   if (!$out.value) return;
@@ -101,7 +100,6 @@ $btn_copy.onclick = function() {
   });
 };
 
-// ── Download ──────────────────────────────
 $btn_download.onclick = function() {
   if (!$out.value) return;
   var filename = current_filename
@@ -119,7 +117,6 @@ $btn_download.onclick = function() {
   show_toast('Saved ' + filename, 'info');
 };
 
-// ── File upload ───────────────────────────
 var current_filename = '';
 
 function load_file(file) {
@@ -134,7 +131,15 @@ function load_file(file) {
     $in.value = e.target.result;
     last_minified = null;
     go_to_start();
-    $in.focus();
+
+    if (!isMobileDevice()) {
+      $in.focus();
+    } else {
+      if (document.activeElement && document.activeElement.blur) {
+        document.activeElement.blur();
+      }
+    }
+
     show_toast('Loaded ' + file.name, 'info');
   };
   reader.readAsText(file);
@@ -159,7 +164,6 @@ $inputPanel.addEventListener('drop', function(e) {
   load_file(e.dataTransfer.files[0]);
 });
 
-// ── Options ───────────────────────────────
 var default_options_text;
 set_options_initial();
 
@@ -214,7 +218,6 @@ function set_options_initial() {
   }
 }
 
-// ── Minify ────────────────────────────────
 function encodeHTML(str) {
   return (str + '')
     .replace(/&/g, '&amp;')
@@ -222,12 +225,10 @@ function encodeHTML(str) {
     .replace(/"/g, '&quot;');
 }
 
-var last_input;
 var last_minified;
 function go(throw_on_error) {
   var input = $in.value;
   if (input === last_minified) return;
-  last_input = input;
   if (throw_on_error === true) {
     main();
   } else {
@@ -244,7 +245,7 @@ function go(throw_on_error) {
     last_minified = input;
     set_output_buttons(!!res.code);
     var saved = Math.round((1 - res.code.length / input.length) * 100);
-    show_toast('Minified — ' + saved + '% smaller', 'success');
+    show_toast('Minified - ' + saved + '% smaller', 'success');
     $statsIn.textContent  = input.length.toLocaleString() + ' bytes';
     $statsOut.textContent = res.code.length.toLocaleString() + ' bytes';
   }
@@ -281,14 +282,12 @@ function show_error(e, param) {
 }
 
 function go_to_start() {
-  last_input = null;
   $out.value = '';
   set_output_buttons(false);
   $out.style.display = '';
   $errorPane.classList.remove('visible');
   $statsIn.textContent  = '';
   $statsOut.textContent = '';
-  return false;
 }
 
 function select_text() {
