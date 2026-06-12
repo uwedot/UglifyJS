@@ -82,7 +82,6 @@ $btn_go.onclick = go;
 $('btn-options-save').onclick  = set_options;
 $('btn-options-reset').onclick = reset_options;
 $in.oninput = function() { last_minified = null; go_to_start(); };
-$out.onfocus = select_text;
 
 var $copyText = $btn_copy.querySelector('.btn-text');
 $btn_copy.onclick = function() {
@@ -289,15 +288,4 @@ function go_to_start() {
   $errorPane.classList.remove('visible');
   $statsIn.textContent  = '';
   $statsOut.textContent = '';
-}
-
-function select_text() {
-  var self = this;
-  self.select();
-  self.onmouseup = self.onkeyup = function() {
-    self.onmouseup = self.onkeyup = null;
-    self.scrollTop = 0;
-    return false;
-  };
-  return false;
 }

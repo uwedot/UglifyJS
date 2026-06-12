@@ -8,22 +8,23 @@
 }
 
 :root {
-  --bg: #0a0a0a;
-  --surface: #111111;
-  --surface2: #1a1a1a;
-  --border: #1f1f1f;
-  --border2: #2a2a2a;
-  --accent: #e8e0d0;
-  --accent-glow: rgba(232, 224, 208, 0.06);
-  --accent-border: rgba(232, 224, 208, 0.14);
+  --bg: #0c0c0c;
+  --surface: #141414;
+  --surface2: #1c1c1c;
+  --surface3: #222222;
+  --border: #242424;
+  --border2: #303030;
+  --accent: #d4c9b8;
+  --accent-glow: rgba(212, 201, 184, 0.07);
+  --accent-border: rgba(212, 201, 184, 0.16);
   --success: #4ade80;
   --danger: #f87171;
-  --text: #f0f0f0;
-  --text-mid: #707070;
-  --text-dim: #333333;
+  --text: #ebebeb;
+  --text-mid: #888888;
+  --text-dim: #555555;
   --mono: "JetBrains Mono", "Fira Code", monospace;
   --ui: "Outfit", system-ui, sans-serif;
-  --r: 5px;
+  --r: 4px;
   --header-h: 44px;
   --bar-h: 34px;
   --footer-h: 42px;
@@ -46,7 +47,7 @@ body {
   align-items: center;
   justify-content: space-between;
   height: var(--header-h);
-  padding: 0 14px;
+  padding: 0 16px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   position: relative;
@@ -56,15 +57,15 @@ body {
 
 @supports (padding: max(0px)) {
   .header {
-    padding-left: max(14px, env(safe-area-inset-left));
-    padding-right: max(14px, env(safe-area-inset-right));
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
   }
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
   text-decoration: none;
   color: var(--text);
   user-select: none;
@@ -76,12 +77,12 @@ body {
 
 .logo-icon {
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 500;
   color: var(--accent);
   background: var(--accent-glow);
   border: 1px solid var(--accent-border);
-  border-radius: 4px;
+  border-radius: 3px;
   padding: 2px 7px;
   letter-spacing: -0.02em;
 }
@@ -89,12 +90,12 @@ body {
 .logo-name {
   font-size: 0.875rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   transition: color 0.12s;
 }
 
 .logo-ver {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-dim);
   font-weight: 400;
 }
@@ -102,16 +103,17 @@ body {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .header-tagline {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-dim);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   pointer-events: none;
 }
 
@@ -136,7 +138,7 @@ body {
   align-items: center;
   justify-content: space-between;
   height: var(--bar-h);
-  padding: 0 10px 0 12px;
+  padding: 0 12px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
@@ -144,9 +146,9 @@ body {
 }
 
 .panel-label {
-  font-size: 0.64rem;
+  font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-dim);
 }
@@ -158,13 +160,13 @@ body {
 }
 
 .panel-bytes {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-family: var(--mono);
   color: var(--success);
   font-weight: 500;
   letter-spacing: 0.01em;
   margin-left: auto;
-  margin-right: 6px;
+  margin-right: 4px;
 }
 
 #in,
@@ -175,11 +177,11 @@ body {
   color: var(--text);
   font-family: var(--mono);
   font-size: 0.8rem;
-  line-height: 1.8;
+  line-height: 1.85;
   border: none;
   outline: none;
   resize: none;
-  padding: 14px 16px;
+  padding: 16px 18px;
   tab-size: 2;
   caret-color: var(--accent);
   min-height: 0;
@@ -191,12 +193,14 @@ body {
 }
 
 #in:focus {
-  background: rgba(232, 224, 208, 0.015);
+  background: rgba(212, 201, 184, 0.012);
 }
 
 #out {
   color: var(--text-mid);
   cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .panel-footer {
@@ -204,7 +208,7 @@ body {
   align-items: center;
   justify-content: space-between;
   height: var(--footer-h);
-  padding: 0 10px 0 12px;
+  padding: 0 12px;
   background: var(--surface);
   border-top: 1px solid var(--border);
   flex-shrink: 0;
@@ -220,15 +224,15 @@ body {
   position: absolute;
   inset: var(--bar-h) 0 var(--footer-h);
   z-index: 20;
-  background: rgba(232, 224, 208, 0.04);
-  border: 2px dashed rgba(232, 224, 208, 0.25);
+  background: rgba(212, 201, 184, 0.03);
+  border: 1px dashed rgba(212, 201, 184, 0.2);
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 500;
   color: var(--accent);
   pointer-events: none;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
 }
 
 .drop-zone.active {
@@ -239,7 +243,7 @@ body {
   display: none;
   flex: 1;
   overflow: auto;
-  padding: 14px 16px;
+  padding: 16px 18px;
   min-height: 0;
 }
 
@@ -249,12 +253,12 @@ body {
 
 #error {
   font-family: var(--mono);
-  font-size: 0.77rem;
-  line-height: 1.85;
+  font-size: 0.76rem;
+  line-height: 1.9;
   white-space: pre-wrap;
   word-break: break-word;
-  background: rgba(248, 113, 113, 0.04);
-  border-left: 2px solid var(--danger);
+  background: rgba(248, 113, 113, 0.035);
+  border-left: 1px solid var(--danger);
   border-radius: 0 var(--r) var(--r) 0;
   padding: 12px 14px;
   color: #fca5a5;
@@ -262,26 +266,25 @@ body {
 
 .btn {
   font-family: var(--ui);
-  font-size: 0.75rem;
+  font-size: 0.74rem;
   font-weight: 500;
   line-height: 1;
   border-radius: var(--r);
   cursor: pointer;
-  transition: background 0.1s, border-color 0.1s, color 0.1s, opacity 0.1s;
-  transition: transform 0.08s;
+  transition: background 0.1s, border-color 0.1s, color 0.1s, opacity 0.1s, transform 0.08s;
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
   gap: 5px;
   text-decoration: none;
   user-select: none;
-  padding: 0.36rem 0.65rem;
+  padding: 0.35rem 0.7rem;
   border: 1px solid transparent;
   flex-shrink: 0;
 }
 
 .btn:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
 }
 
 .btn-ghost {
@@ -297,18 +300,18 @@ body {
 }
 
 .btn-primary {
-  background: transparent;
+  background: var(--surface2);
   border-color: var(--border2);
-  color: var(--text-mid);
+  color: var(--text);
   font-weight: 500;
-  padding: 0.36rem 1.4rem;
+  padding: 0.35rem 1.4rem;
   letter-spacing: -0.01em;
 }
 
 .btn-primary:hover {
-  background: var(--surface2);
-  color: var(--text);
+  background: var(--surface3);
   border-color: var(--border2);
+  color: var(--text);
 }
 
 label.btn {
@@ -326,13 +329,13 @@ label.btn input[type="file"] {
 
 #btn-copy.copied {
   color: var(--success);
-  border-color: rgba(52, 211, 153, 0.3);
-  background: rgba(52, 211, 153, 0.06);
+  border-color: rgba(74, 222, 128, 0.25);
+  background: rgba(74, 222, 128, 0.05);
 }
 
 #btn-copy:disabled,
 #btn-download:disabled {
-  opacity: 0.28;
+  opacity: 0.22;
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -342,9 +345,9 @@ label.btn input[type="file"] {
   position: fixed;
   inset: 0;
   z-index: 200;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   align-items: center;
   justify-content: center;
   padding: 16px;
@@ -356,32 +359,28 @@ label.btn input[type="file"] {
 }
 
 @keyframes overlay-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 .modal {
   background: var(--surface);
   border: 1px solid var(--border2);
-  border-radius: 10px;
+  border-radius: 8px;
   width: 100%;
   max-width: 540px;
   max-height: 80vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75);
-  animation: modal-in 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.8);
+  animation: modal-in 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes modal-in {
   from {
     opacity: 0;
-    transform: translateY(8px) scale(0.985);
+    transform: translateY(6px) scale(0.988);
   }
   to {
     opacity: 1;
@@ -400,7 +399,7 @@ label.btn input[type="file"] {
 }
 
 .modal-title {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--text);
@@ -412,11 +411,11 @@ label.btn input[type="file"] {
   color: var(--text);
   font-family: var(--mono);
   font-size: 0.78rem;
-  line-height: 1.8;
+  line-height: 1.85;
   border: none;
   outline: none;
   resize: none;
-  padding: 14px 16px;
+  padding: 16px 18px;
   min-height: 260px;
   overflow: auto;
   caret-color: var(--accent);
@@ -440,10 +439,10 @@ label.btn input[type="file"] {
   justify-content: center;
   width: 26px;
   height: 26px;
-  border-radius: 5px;
+  border-radius: 4px;
   border: none;
   background: transparent;
-  color: var(--text-dim);
+  color: var(--text-mid);
   cursor: pointer;
   transition: background 0.1s, color 0.1s;
   flex-shrink: 0;
@@ -465,7 +464,7 @@ code {
 }
 
 mark {
-  background: rgba(252, 211, 77, 0.18);
+  background: rgba(252, 211, 77, 0.15);
   color: #fcd34d;
   padding: 0 0.12em;
   border-radius: 2px;
@@ -473,7 +472,7 @@ mark {
 }
 
 small {
-  opacity: 0.5;
+  opacity: 0.45;
 }
 
 pre {
@@ -489,7 +488,7 @@ pre {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   z-index: 999;
   pointer-events: none;
 }
@@ -497,23 +496,22 @@ pre {
 .toast {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: var(--surface2);
+  gap: 7px;
+  background: rgba(20, 20, 20, 0.92);
   border: 1px solid var(--border2);
   color: var(--text);
   font-family: var(--ui);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  padding: 0.45rem 0.9rem;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
   white-space: nowrap;
   opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.18s ease, transform 0.18s ease;
+  transform: translateY(6px);
+  transition: opacity 0.16s ease, transform 0.16s ease;
   max-width: 85vw;
-  backdrop-filter: blur(8px);
-  background: rgba(26, 26, 26, 0.9);
+  backdrop-filter: blur(12px);
 }
 
 .toast.show {
@@ -522,8 +520,8 @@ pre {
 }
 
 .toast-icon {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
 }
 
@@ -536,7 +534,7 @@ pre {
 }
 
 .toast.success {
-  border-color: rgba(74, 222, 128, 0.4);
+  border-color: rgba(74, 222, 128, 0.3);
 }
 
 .toast.success .toast-icon {
@@ -544,7 +542,7 @@ pre {
 }
 
 .toast.error {
-  border-color: rgba(248, 113, 113, 0.4);
+  border-color: rgba(248, 113, 113, 0.3);
 }
 
 .toast.error .toast-icon {
@@ -560,8 +558,8 @@ pre {
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 3px;
+  height: 3px;
 }
 
 ::-webkit-scrollbar-track {
@@ -570,11 +568,11 @@ pre {
 
 ::-webkit-scrollbar-thumb {
   background: var(--border2);
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a3a3a;
+  background: #404040;
 }
 
 @media (max-width: 640px) and (orientation: portrait) {
@@ -640,7 +638,7 @@ pre {
     max-width: 90vw;
     width: 100%;
     margin: auto;
-    border-radius: 14px;
+    border-radius: 12px;
   }
 
   #options {
@@ -661,15 +659,15 @@ pre {
   }
 
   .toast {
-    font-size: 0.85rem;
-    padding: 0.45rem 1rem;
-    gap: 8px;
-    border-radius: 28px;
+    font-size: 0.82rem;
+    padding: 0.42rem 0.9rem;
+    gap: 7px;
+    border-radius: 24px;
   }
 
   .toast-icon {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
 
   .error-pane {
@@ -677,16 +675,16 @@ pre {
   }
 
   #error {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     line-height: 1.6;
   }
 
   .panel-label {
-    font-size: 0.68rem;
+    font-size: 0.62rem;
   }
 
   .panel-bytes {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
   }
 
   .panel-footer {
@@ -700,7 +698,7 @@ pre {
   }
 
   .drop-zone {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
   }
 }
 
@@ -718,14 +716,14 @@ pre {
   }
 
   .toast {
-    font-size: 0.75rem;
-    padding: 0.35rem 0.9rem;
+    font-size: 0.72rem;
+    padding: 0.32rem 0.8rem;
     gap: 6px;
   }
 
   .toast-icon {
-    width: 14px;
-    height: 14px;
+    width: 13px;
+    height: 13px;
   }
 }
 
