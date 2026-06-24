@@ -1,5 +1,125 @@
 'use strict';
 
+var MaxInputBytes = 5000000;
+var MaxOptionsBytes = 20000;
+var MaxUploadBytes = 5000000;
+var AllowedUploadExtension = /\.js$/i;
+var AllowedUploadMimeTypes = ['text/javascript', 'application/javascript', 'text/plain', ''];
+
+var OptionsSchema = {
+  parse: {
+    bare_returns: 'boolean', expression: 'boolean', filename: 'nullable_string',
+    html5_comments: 'boolean', shebang: 'boolean', strict: 'boolean', toplevel: 'nullable_string'
+  },
+  compress: {
+    arrows: 'boolean', booleans: 'boolean', collapse_vars: 'boolean', comparisons: 'boolean',
+    conditionals: 'boolean', dead_code: 'boolean', drop_console: 'boolean', drop_debugger: 'boolean',
+    evaluate: 'boolean', expression: 'boolean', global_defs: 'plain_object', hoist_funs: 'boolean',
+    hoist_props: 'boolean', hoist_vars: 'boolean', if_return: 'boolean', inline: 'number_or_boolean',
+    join_vars: 'boolean', keep_fargs: 'boolean', keep_fnames: 'boolean', keep_infinity: 'boolean',
+    loops: 'boolean', negate_iife: 'boolean', passes: 'number', properties: 'boolean',
+    pure_getters: 'pure_getters_value', pure_funcs: 'nullable_string_array', reduce_funcs: 'boolean',
+    reduce_vars: 'boolean', sequences: 'number_or_boolean', side_effects: 'boolean', switches: 'boolean',
+    top_retain: 'nullable_string_or_array', toplevel: 'boolean', typeofs: 'boolean', unsafe: 'boolean',
+    unsafe_comps: 'boolean', unsafe_Function: 'boolean', unsafe_math: 'boolean', unsafe_proto: 'boolean',
+    unsafe_regexp: 'boolean', unsafe_undefined: 'boolean', unused: 'boolean'
+  },
+  mangle: {
+    eval: 'boolean', keep_fnames: 'boolean', properties: 'boolean_or_object',
+    reserved: 'string_array', toplevel: 'boolean'
+  },
+  output: {
+    ascii_only: 'boolean', beautify: 'boolean', comments: 'boolean_or_string', indent_level: 'number',
+    indent_start: 'number', inline_script: 'boolean', keep_quoted_props: 'boolean',
+    max_line_len: 'number_or_boolean', preamble: 'nullable_string', preserve_line: 'boolean',
+    quote_keys: 'boolean', quote_style: 'number', semicolons: 'boolean', shebang: 'boolean',
+    source_map: 'nullable_any', webkit: 'boolean', width: 'number', wrap_iife: 'boolean'
+  },
+  wrap: 'boolean'
+};
+
+function validate_options_value(value, kind) {
+  switch (kind) {
+    case 'boolean':
+      return typeof value === 'boolean';
+    case 'number':
+      return typeof value === 'number' && isFinite(value);
+    case 'number_or_boolean':
+      return typeof value === 'boolean' || (typeof value === 'number' && isFinite(value));
+    case 'boolean_or_string':
+      return typeof value === 'boolean' || typeof value === 'string';
+    case 'boolean_or_object':
+      return typeof value === 'boolean' || (value !== null && typeof value === 'object' && !Array.isArray(value));
+    case 'nullable_string':
+      return value === null || typeof value === 'string';
+    case 'nullable_any':
+      return value === null || typeof value === 'string' || typeof value === 'boolean' || typeof value === 'object';
+    case 'nullable_string_array':
+      return value === null || (Array.isArray(value) && value.every(function(v) { return typeof v === 'string'; }));
+    case 'nullable_string_or_array':
+      return value === null || typeof value === 'string' ||
+        (Array.isArray(value) && value.every(function(v) { return typeof v === 'string'; }));
+    case 'string_array':
+      return Array.isArray(value) && value.every(function(v) { return typeof v === 'string'; });
+    case 'plain_object':
+      return value !== null && typeof value === 'object' && !Array.isArray(value);
+    case 'pure_getters_value':
+      return typeof value === 'boolean' || value === 'strict';
+    default:
+      return false;
+  }
+}
+
+function validate_options_section(input, schema, path) {
+  if (input === null || typeof input !== 'object' || Array.isArray(input)) {
+    throw new Error('Invalid options: "' + path + '" must be an object');
+  }
+  var inputKeys = Object.keys(input);
+  for (var i = 0; i < inputKeys.length; i++) {
+    var key = inputKeys[i];
+    if (!Object.prototype.hasOwnProperty.call(schema, key)) {
+      throw new Error('Invalid options: unexpected field "' + path + '.' + key + '"');
+    }
+  }
+  var schemaKeys = Object.keys(schema);
+  for (var j = 0; j < schemaKeys.length; j++) {
+    var schemaKey = schemaKeys[j];
+    if (!Object.prototype.hasOwnProperty.call(input, schemaKey)) continue;
+    if (!validate_options_value(input[schemaKey], schema[schemaKey])) {
+      throw new Error('Invalid options: "' + path + '.' + schemaKey + '" has an unexpected type or value');
+    }
+  }
+}
+
+function validate_options_object(input) {
+  if (input === null || typeof input !== 'object' || Array.isArray(input)) {
+    throw new Error('Invalid options: root must be an object');
+  }
+  var topKeys = Object.keys(input);
+  var schemaTopKeys = Object.keys(OptionsSchema);
+  for (var i = 0; i < topKeys.length; i++) {
+    if (schemaTopKeys.indexOf(topKeys[i]) === -1) {
+      throw new Error('Invalid options: unexpected field "' + topKeys[i] + '"');
+    }
+  }
+  if (Object.prototype.hasOwnProperty.call(input, 'parse')) {
+    validate_options_section(input.parse, OptionsSchema.parse, 'parse');
+  }
+  if (Object.prototype.hasOwnProperty.call(input, 'compress')) {
+    validate_options_section(input.compress, OptionsSchema.compress, 'compress');
+  }
+  if (Object.prototype.hasOwnProperty.call(input, 'mangle')) {
+    validate_options_section(input.mangle, OptionsSchema.mangle, 'mangle');
+  }
+  if (Object.prototype.hasOwnProperty.call(input, 'output')) {
+    validate_options_section(input.output, OptionsSchema.output, 'output');
+  }
+  if (Object.prototype.hasOwnProperty.call(input, 'wrap') && typeof input.wrap !== 'boolean') {
+    throw new Error('Invalid options: "wrap" must be a boolean');
+  }
+  return input;
+}
+
 var default_options = {};
 
 function $(id) { return document.getElementById(id); }
@@ -37,7 +157,7 @@ function show_toast(msg, type, duration) {
 
   var el = document.createElement('div');
   el.className = 'toast ' + type;
-  el.innerHTML = ICONS[type] + '<span>' + msg + '</span>';
+  el.innerHTML = ICONS[type] + '<span>' + encodeHTML(msg) + '</span>';
   $toastContainer.appendChild(el);
 
   requestAnimationFrame(function() {
@@ -120,14 +240,31 @@ var current_filename = '';
 
 function load_file(file) {
   if (!file) return;
-  if (!file.name.match(/\.js$/i)) {
+  if (!file.name || typeof file.name !== 'string' || !AllowedUploadExtension.test(file.name)) {
     show_toast('Only .js files are supported', 'error');
     return;
   }
-  current_filename = file.name;
+  if (file.size > MaxUploadBytes) {
+    show_toast('File too large - limit is ' + (MaxUploadBytes / 1000000) + ' MB', 'error');
+    return;
+  }
+  if (file.type && AllowedUploadMimeTypes.indexOf(file.type) === -1) {
+    show_toast('Unsupported file type', 'error');
+    return;
+  }
+  current_filename = file.name.slice(0, 255);
   var reader = new FileReader();
   reader.onload = function(e) {
-    $in.value = e.target.result;
+    var text = e.target.result;
+    if (typeof text !== 'string') {
+      show_toast('Could not read file', 'error');
+      return;
+    }
+    if (text.length > MaxInputBytes) {
+      show_toast('File content too large - limit is ' + (MaxInputBytes / 1000000) + ' MB', 'error');
+      return;
+    }
+    $in.value = text;
     last_minified = null;
     go_to_start();
 
@@ -138,6 +275,9 @@ function load_file(file) {
         document.activeElement.blur();
       }
     }
+  };
+  reader.onerror = function() {
+    show_toast('Could not read file', 'error');
   };
   reader.readAsText(file);
 }
@@ -165,7 +305,20 @@ var default_options_text;
 set_options_initial();
 
 function get_options(value) {
-  return new Function('return (' + (value || $options.value) + ');')();
+  var text = value || $options.value;
+  if (typeof text !== 'string') {
+    throw new Error('Invalid options: expected text');
+  }
+  if (text.length > MaxOptionsBytes) {
+    throw new Error('Options too large: limit is ' + MaxOptionsBytes.toLocaleString() + ' characters');
+  }
+  var parsed;
+  try {
+    parsed = JSON.parse(text);
+  } catch (e) {
+    throw new Error('Invalid options: must be valid JSON');
+  }
+  return validate_options_object(parsed);
 }
 
 function set_options() {
@@ -175,7 +328,7 @@ function set_options() {
     try {
       if (default_options_text === $options.value)
         localStorage.removeItem('uglify-options');
-      else
+      else if ($options.value.length <= MaxOptionsBytes)
         localStorage.setItem('uglify-options', $options.value);
     } catch (e) {}
     go(true);
@@ -219,7 +372,9 @@ function encodeHTML(str) {
   return (str + '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
-    .replace(/"/g, '&quot;');
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 var last_minified;
@@ -237,6 +392,9 @@ function go(throw_on_error) {
 
   function main() {
     if (!input || input === $in.textContent) { go_to_start(); return; }
+    if (input.length > MaxInputBytes) {
+      throw new Error('Input too large - limit is ' + (MaxInputBytes / 1000000) + ' MB');
+    }
     var res = minify(input, uglify_options);
     if (res.error) throw res.error;
     $errorPane.classList.remove('visible');
